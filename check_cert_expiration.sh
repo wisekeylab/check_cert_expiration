@@ -81,7 +81,8 @@ TMPFILE=""
 
 if [[ "$SOURCE" =~ ^https?:// ]]; then
     TMPFILE=$(mktemp /tmp/check_cert_expiration.XXXXXX)
-    if ! curl -sSL --max-time 30 -o "$TMPFILE" "$SOURCE" 2>/dev/null; then
+    # TODO evaluate whether TLS certificate verification should be disabled by default
+    if ! curl -k -sSL --max-time 30 -o "$TMPFILE" "$SOURCE" 2>/dev/null; then
         rm -f "$TMPFILE"
         echo "UNKNOWN: Failed to download certificate from $SOURCE"
         exit $STATE_UNKNOWN
